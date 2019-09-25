@@ -15,41 +15,37 @@ int getN()
 bool noConflict(const std::stack<Queen> &queens, int n)
 {
   std::stack<Queen> temp(queens);
-  bool noConflict = false;
+  bool noConflict = true;
   if (temp.size() > 1)
   {
     // get current queen
     Queen current = temp.top();
-    for (int i = 0; i < temp.size(); i++)
+    // pop temp to check against queen below
+    temp.pop();
+    // check for illegal placement
+    for (int i = 0; i < n; i++)
     {
-      // pop temp to check against queen below
-      temp.pop();
       // get queen below
       Queen check = temp.top();
-      // check for illegal placement
-      if (current.getRow() != check.getRow())
+      if (current.getCol() == check.getCol())
       {
-        if (current.getCol() != check.getCol())
+        noConflict = false;
+        // diagonal down left
+        if (current.getRow() == check.getRow() - i && current.getCol() == check.getCol() - i)
         {
-          for (int i = 0; i < n; i++)
+          noConflict = false;
+          // diagonal down right
+          if (current.getRow() == check.getRow() - i && current.getCol() == check.getCol() + i)
           {
-            // diagonal down left
-            if (current.getRow() != check.getRow() - i && current.getRow() != check.getRow() - i)
-            {
-              // diagonal down right
-              if (current.getRow() != check.getRow() - i && current.getRow() != check.getRow() + i)
-              {
-                noConflict = true;
-              }
-            }
+            noConflict = false;
           }
         }
       }
+      if (temp.size() > 1)
+      {
+        temp.pop();
+      }
     }
-  }
-  else
-  {
-    noConflict = true;
   }
 
   return noConflict;

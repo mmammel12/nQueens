@@ -8,7 +8,7 @@ valgrind: nQueens
 	valgrind --leak-check=full --log-file="valgrind.txt" ./nQueens
 clean:
 	rm -f *.o
-	rm *.txt
 	rm nQueens
+	rm *.txt
 run: nQueens
 	./nQueens
