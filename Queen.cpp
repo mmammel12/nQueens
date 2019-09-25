@@ -15,3 +15,15 @@ Queen::Queen(int row, int col)
 Queen::~Queen()
 {
 }
+
+/// return row
+int Queen::getRow(void)
+{
+  return this->row;
+}
+
+/// return column
+int Queen::getCol(void)
+{
+  return this->col;
+}
