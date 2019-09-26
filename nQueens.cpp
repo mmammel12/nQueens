@@ -15,37 +15,39 @@ int getN()
 bool noConflict(const std::stack<Queen> &queens, int n)
 {
   std::stack<Queen> temp(queens);
-  bool noConflict = true;
+  bool noConflict = false;
   if (temp.size() > 1)
   {
+    int size = temp.size();
     // get current queen
     Queen current = temp.top();
-    // pop temp to check against queen below
-    temp.pop();
+
     // check for illegal placement
-    for (int i = 0; i < n; i++)
+    for (int i = 1; i <= size; i++)
     {
+      // pop temp to check against queen below
+      temp.pop();
       // get queen below
       Queen check = temp.top();
-      if (current.getCol() == check.getCol())
+      // if columns !=, diagonal down left !=, diagonal down right !=
+      if (current.getCol() != check.getCol() && current.getCol() - i != check.getCol() && current.getCol() + i != check.getCol())
       {
-        noConflict = false;
-        // diagonal down left
-        if (current.getRow() == check.getRow() - i && current.getCol() == check.getCol() - i)
+        // all queens below checked, set noConflict to true
+        if (temp.size() == 1)
         {
-          noConflict = false;
-          // diagonal down right
-          if (current.getRow() == check.getRow() - i && current.getCol() == check.getCol() + i)
-          {
-            noConflict = false;
-          }
+          noConflict = true;
+          break;
         }
       }
-      if (temp.size() > 1)
+      else
       {
-        temp.pop();
+        break;
       }
     }
+  }
+  else
+  {
+    noConflict = true;
   }
 
   return noConflict;
@@ -70,8 +72,9 @@ void placeQueens(std::stack<Queen> *queens, int n)
       }
     }
     // else if there is a conflict and there is room to shift right
-    else if (queens->top().getCol() < n)
+    else if (queens->top().getCol() < n - 1)
     {
+      // shift queen right
       int col = queens->top().getCol() + 1;
       queens->pop();
       queens->push(Queen(filled, col));
@@ -81,9 +84,14 @@ void placeQueens(std::stack<Queen> *queens, int n)
     {
       do
       {
+        // pop queen that can't be shifted and decrement filled
         queens->pop();
         filled--;
-      } while (!noConflict(*queens, n) && queens->top().getCol() == n - 1);
+      } while (queens->top().getCol() == n - 1);
+      // shift next queen right
+      int col = queens->top().getCol() + 1;
+      queens->pop();
+      queens->push(Queen(filled, col));
     }
   } while (filled < n);
 }
